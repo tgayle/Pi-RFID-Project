@@ -1,5 +1,6 @@
 from database import database as db
 from platform import system
+import card_helper
 
 is_linux = system() == "Linux"
 
@@ -35,16 +36,11 @@ def get_nfc_uid(device):
     str_list = string.split("\n")
     uid = str_list[2].strip().replace("  ", " ")
     uid = uid[uid.index(": ") + 2:]
-    #print("ID was %s" % uid)
     return uid
 
 
-def start_option(i):
-    options[i][1]()
-
 def wait_for_card():
-    # number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 16)
-
+    number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 16)
     while number_found < 1:
         number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 16)
 
@@ -53,20 +49,12 @@ def wait_for_card():
 def read_card():
     if is_linux:
         print("Please place an NFC device on the scanner.")
+        print("")
 
-        number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 16)
+        uid_found = wait_for_card()
 
-        while number_found < 1:
-            number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 16)
-
-        print()
-        print("Devices found:")
-
-        for n in range(number_found):
-            num, string = nfc.str_nfc_target(devices[n], False)
-
-            print("%d: %s" % (n + 1, get_nfc_uid(string)))
-            print('\n################\n')
+        print("Device found: %s" % uid_found)
+        print('')
 
     else:
         print("You must be on a linux device with a PN532 to do this.")
@@ -75,27 +63,47 @@ def read_card():
 def add_automation():
     return
 
+def edit_card():
+    print("Please place the card you'd like to edit on the scanner.")
+    card = wait_for_card()
+
+    print("Settings for card %s" % card)
+    print("")
+    print("What would you like to do?")
+
+    opts = [["Give this card a name.", card_helper.name_card]
+            ]
+
+    for i, k in enumerate(opts):
+        print("%d: %s" % (i + 1, k[0]))
+
 options = [
     ["Read a card's id.", read_card],
     ["Add an automation to a card.", add_automation],
-    ]
+    ["Edit a card.", edit_card],
+]
+
+def start_option(i):
+    options[i][1]()
 
 
 if __name__ == "__main__":
+    db.open_database()
+
     print("What would you like to do?")
 
-    # print_options()
-    #
-    # selected_item = int(input())
-    #
-    # while (selected_item > len(options)) or (selected_item < 0):
-    #     print("Please select a valid option.")
-    #     print_options()
-    #     selected_item = int(input())
-    #
-    # print("You selected: %s" % options[selected_item - 1][0])
-    # start_option(selected_item-1)
+    print_options()
 
-    while True:
-        read_card()
+    selected_item = int(input())
+
+    while (selected_item > len(options)) or (selected_item < 0):
+        print("Please select a valid option.")
+        print_options()
+        selected_item = int(input())
+
+    print("You selected: %s" % options[selected_item - 1][0])
+    start_option(selected_item-1)
+
+    db.close_database()
+    print("end program")
 
