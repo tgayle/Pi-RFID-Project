@@ -1,5 +1,5 @@
 import sqlite3
-import sys
+from sys import maxsize
 
 TABLE_SCRIPT_REFERENCE_NAME = "references"
 COLUMN_RFID_ID = "rfid_id"
@@ -24,6 +24,7 @@ CREATE_CARDS_NAMES_LIST_TABLE = "CREATE TABLE IF NOT EXISTS %s (uid TEXT, nickna
 _conn = None
 _cursor = None
 
+
 def open_database():
     global _conn
     global _cursor
@@ -38,6 +39,7 @@ def open_database():
 
 
 def close_database():
+    _conn.commit()
     _cursor.close()
     _conn.close()
 
@@ -70,7 +72,7 @@ def add_script(rfid, script_name, type, on_success_callback, on_failure_callback
 def _get_identifier(object):
     h = hash(object) # Convert object to a number for identification.
     if h < 0:
-        h += sys.maxsize
+        h += maxsize
         # Using the hash function can sometimes return a negative number,
         # so we add sys.maxsize to make sure it's always a positive number.
 
@@ -90,8 +92,12 @@ def name_card(uid, name):
 
 def get_card_name(uid):
     _cursor.execute("SELECT nickname from %s WHERE uid=?" % TABLE_CARD_NICKNAMES_NAME, [uid])
+    db_result = _cursor.fetchone()
 
-    return str(_cursor.fetchone()[0])
+    if db_result is None:
+        return None
+    else:
+        return db_result[0]
 
 def get_all_cardnames():
     _cursor.execute("SELECT * from %s" % TABLE_CARD_NICKNAMES_NAME)
@@ -106,7 +112,7 @@ def test_success_callback():
     print("Success!")
 
 
-def failure_callback():
+def test_failure_callback():
     print("Failure.")
 
 
@@ -129,4 +135,5 @@ if __name__ == "__main__":
         print("%s -> %s" % (card[0], card[1]))
 
     print("Card %s was nicknamed %s" % (testcard, get_card_name(testcard)))
+    print("card name for abcdef is %s" % get_card_name("abcdef"))
     close_database()
