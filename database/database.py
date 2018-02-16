@@ -44,33 +44,45 @@ def close_database():
     _conn.close()
 
 
-def add_script(rfid, script_name, type, on_success_callback, on_failure_callback):
+def add_script(rfid, script_name, type, script, on_finish_callback=None):
 
     reference = _get_identifier(script_name)
 
-    try:
-        _cursor.execute("SELECT * FROM 'references' WHERE script_reference=?", [reference])
-        result = _cursor.fetchall()
-        print(result)
+    _cursor.execute("SELECT * FROM 'references' WHERE script_reference=?", [reference])
+    result = _cursor.fetchall()
 
-        if len(result) > 0:
-            print("Script %s already exists and is assigned to %s" % (script_name, rfid))
-            on_failure_callback()
+    if len(result) > 0:
+        print("The name '%s' is already taken and assigned to %s" % (script_name, rfid))
+        return
+    else:
+        _cursor.execute("INSERT INTO '%s' (rfid_id, 'name', 'type', script_reference) VALUES (?, ?, ?, ?)"
+                        % TABLE_SCRIPT_REFERENCE_NAME, (rfid, script_name, type, reference) )
+
+        _cursor.execute("INSERT INTO %s (script_id, 'type', script) VALUES (?, ?, ?)"
+                        % TABLE_SCRIPTS_NAME, (reference, type, script))
+        _conn.commit()
+
+        if on_finish_callback is not None:
+            on_finish_callback()
             return
-        else:
-            _cursor.execute("INSERT INTO '%s' (rfid_id, 'name', 'type', script_reference) VALUES (?, ?, ?, ?)"
-                            % TABLE_SCRIPT_REFERENCE_NAME, (rfid, script_name, type, reference) )
-            _conn.commit()
-
-            print("Added a script.")
-            on_success_callback()
-            return
-    except:
-        on_failure_callback()
 
 
-def _get_identifier(object):
-    h = hash(object) # Convert object to a number for identification.
+def get_script_for_card(uid):
+    _cursor.execute("SELECT * FROM '%s' WHERE rfid_id=?" % TABLE_SCRIPT_REFERENCE_NAME, [uid])
+
+    cursor_reference = _cursor.fetchone()
+
+    if cursor_reference is None:
+        return [None, None]
+
+    _cursor.execute("SELECT type, script FROM %s WHERE script_id=?" % TABLE_SCRIPTS_NAME, [str(cursor_reference[3])])
+    returned = _cursor.fetchone()
+
+    return [returned[0], returned[1]]
+
+
+def _get_identifier(obj):
+    h = hash(obj)  # Convert object to a number for identification.
     if h < 0:
         h += maxsize
         # Using the hash function can sometimes return a negative number,
@@ -99,6 +111,7 @@ def get_card_name(uid):
     else:
         return db_result[0]
 
+
 def get_all_cardnames():
     _cursor.execute("SELECT * from %s" % TABLE_CARD_NICKNAMES_NAME)
     cards = _cursor.fetchall()
@@ -108,32 +121,4 @@ def get_all_cardnames():
 
     return cards
 
-def test_success_callback():
-    print("Success!")
 
-
-def test_failure_callback():
-    print("Failure.")
-
-
-if __name__ == "__main__":
-    open_database()
-    #add_script("testrfid", "Script 1", "PRINT", test_success_callback, failure_callback)
-    testcard = "ae ef bc de"
-
-    testcards = [
-        ["asdfasd", "nme 1"],
-        ["asdfopwe", "nme2"],
-        [testcard, "nme3"]
-    ]
-
-    for li in testcards:
-        name_card(li[0], li[1])
-
-    print("All cards:")
-    for card in get_all_cardnames():
-        print("%s -> %s" % (card[0], card[1]))
-
-    print("Card %s was nicknamed %s" % (testcard, get_card_name(testcard)))
-    print("card name for abcdef is %s" % get_card_name("abcdef"))
-    close_database()

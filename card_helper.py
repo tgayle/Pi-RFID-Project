@@ -29,7 +29,8 @@ def wait_for_card():
     while number_found < 1:
         number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 16)
 
-    return get_nfc_uid(devices[0])
+    uid = get_nfc_uid(devices[0])
+    return [uid, db.get_card_name(uid)]
 
 
 def name_card(card, name):
@@ -42,19 +43,41 @@ def name_card(card, name):
 
     db.name_card(card, name)
 
-    return
-
 
 def name_card_ask_for_name(card):
     name = raw_input("What would you like this card to be named? ")
 
     print("Are you sure that you want to name this card '%s'" % name)
-    confirm = raw_input("Yes or No: ").strip().lower()
-    print("confirm is %s " % confirm)
-    if confirm not in yes_confirm_options:
-        print("Cancelled.")
-        return
+
 
     print("Nickname for %s is now %s" % (card, name))
     db.name_card(card, name)
 
+
+def add_automation_printmessage(card):
+    automation_name = raw_input("What would you like to name this automation?: ")
+
+    print("What would you like this card to print when activated?")
+    message = raw_input()
+    print("Are you sure you'd like this card to print the following message when activated?: ")
+    print('""')
+    print(message)
+    print(",,")
+
+    print("Yes or No?")
+    if not confirm_selection():
+        print("Cancelled.")
+        return
+
+    def on_finish():
+        print("Automation %s was successfully assigned to %s" % (automation_name, card))
+
+    db.add_script(card, automation_name, "PRINT", message, on_finish_callback=on_finish)
+
+
+def confirm_selection():
+    confirm = raw_input().strip().lower()
+    if confirm not in yes_confirm_options:
+        return False
+
+    return True
