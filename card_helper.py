@@ -1,9 +1,14 @@
 from database import database as db
-from main import is_linux
+from platform import system
 
+is_linux = system() == "Linux"
 yes_confirm_options = ["yes", "y"]
 
 if is_linux:
+    """
+    Determine if the device this is running on is a linux device and if so, attempt to import necessary nfc modules
+    and prepare for later use of the reader.
+    """
     import nfc
 
     context = nfc.init()
@@ -17,6 +22,11 @@ if is_linux:
 
 
 def get_nfc_uid(device):
+    """
+    Parses from the string returned from nfc.str_nfc_target and just returns the uid.
+    :param device: An object of the card class from nfc's implementation. Get this from initiator_list_passive_targets
+    :return: The uid of the given object.
+    """
     num, string = nfc.str_nfc_target(device, False)
     str_list = string.split("\n")
     uid = str_list[2].strip().replace("  ", " ")
@@ -25,15 +35,26 @@ def get_nfc_uid(device):
 
 
 def wait_for_card():
-    number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 16)
+    """
+    Blocks and waits until an NFC device is found by the reader.
+    :return: A tuple with the uid found and it's name if available. Name will be None if there is none.
+    [uid, card_name]
+    """
+    number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 1)
     while number_found < 1:
-        number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 16)
+        number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 1)
 
     uid = get_nfc_uid(devices[0])
     return [uid, db.get_card_name(uid)]
 
 
 def name_card(card, name):
+    """
+    Assign a name to card and store it in DB
+    :param card: The card uid to assign to
+    :param name: The name to be assigned to the card.
+    :return: None
+    """
     confirm = "no"
 
     print("Are you sure that you want to name this card %s" % name)
@@ -41,20 +62,35 @@ def name_card(card, name):
         print("Cancelled.")
         return
 
-    db.name_card(card, name)
+    db.name_card_db(card, name)
 
 
 def name_card_ask_for_name(card):
+    """
+    Ask the user for a name to assign to a card and store it in DB
+    :param card: The card uid to assign to
+    :return: None
+    """
+
     name = raw_input("What would you like this card to be named? ")
 
     print("Are you sure that you want to name this card '%s'" % name)
 
+    print("Yes or No?")
+    if not confirm_selection():
+        print("Cancelled.")
+        return
 
     print("Nickname for %s is now %s" % (card, name))
-    db.name_card(card, name)
+    db.name_card_db(card, name)
 
 
 def add_automation_printmessage(card):
+    """
+    Add an automation to a card that will print a message when activated. Asks user for message to print.
+    :param card: Card uid to add automation to.
+    :return: None
+    """
     automation_name = raw_input("What would you like to name this automation?: ")
 
     print("What would you like this card to print when activated?")
@@ -76,6 +112,10 @@ def add_automation_printmessage(card):
 
 
 def confirm_selection():
+    """
+    Waits for user to input something that qualifies as a 'yes', such as "yes' or "y"
+    :return: True if the input was something that counts as yes, else False.
+    """
     confirm = raw_input().strip().lower()
     if confirm not in yes_confirm_options:
         return False

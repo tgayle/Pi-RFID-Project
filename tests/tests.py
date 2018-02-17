@@ -19,7 +19,7 @@ def test_naming_cards():
     ]
 
     for li in testcards:
-        db.name_card(li[0], li[1])
+        db.name_card_db(li[0], li[1])
 
     print("All cards:")
     for card in db.get_all_cardnames():

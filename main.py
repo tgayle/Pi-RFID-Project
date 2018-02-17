@@ -1,15 +1,22 @@
-from platform import system
 import card_helper
-
-is_linux = system() == "Linux"
 
 
 def print_options(options):
+    """
+    Prints items with numbers from 1 to len(options)
+    :param options: An array of possible options formatted as [option_name, related_function_to_call]
+    :return: None
+    """
     for i, k in enumerate(options):
         print("%d: %s" % (i + 1, k[0]))
 
 
 def select_from_options(options):
+    """
+    Print items with numbers from 1 to len(options) and asks the user to select a number
+    :param options: An array of possible options formatted as [option_name, related_function_to_call]
+    :return: the number selected by the user.
+    """
     print_options(options)
     print("")
 
@@ -17,13 +24,17 @@ def select_from_options(options):
 
     while (selected_item > len(options)) or (selected_item < 0):
         print("Please select a valid option.")
-        print_options()
+        print_options(options)
         selected_item = int(input())
     return selected_item
 
 
 def read_card():
-    if is_linux:
+    """
+    Option for user to select. Reads card and prints name.
+    :return: None
+    """
+    if card_helper.is_linux:
         print("Please place an NFC device on the scanner.")
         print("")
 
@@ -41,6 +52,10 @@ def read_card():
 
 
 def edit_card():
+    """
+    Provide extra options to a card such as changing name after scanning a card.
+    :return: None
+    """
     print("Please place the card you'd like to edit on the scanner.")
     card_uid, card_name = card_helper.wait_for_card()
 
@@ -60,6 +75,10 @@ def edit_card():
 
 
 def add_automation():
+    """
+    Adds an automation to a card. May be PRINT, "PYSCR", or "BSHSCR" (print, python script, or bash script)
+    :return: None
+    """
     print("Place the card you'd like to edit on the scanner.")
 
     uid, name = card_helper.wait_for_card()
@@ -80,6 +99,10 @@ def add_automation():
 
 
 def execute_automation():
+    """
+    Runs the automation assigned to a card if available.
+    :return: None
+    """
     print("Place the card you'd like to execute on the scanner.")
 
     uid, name = card_helper.wait_for_card()
@@ -100,6 +123,10 @@ def execute_automation():
 
 
 def list_cards():
+    """
+    Prints all the cards currently added to the DB with a nickname.
+    :return: None
+    """
     cards = card_helper.db.get_all_cardnames()
 
     for i, c in enumerate(cards):
@@ -116,6 +143,14 @@ main_options = [
 
 
 def start_option(options, i, parameters=None):
+    """
+    Starts an option out of an options array.
+    Each item in the options array should be in format [option_name, option_func]
+    :param options: An array of options formatted as detailed above.
+    :param i: The index of the option to start.
+    :param parameters: Optional. Used for passing in arguments to a function called through start_option.
+    :return: None
+    """
     if parameters is None:
         options[i][1]()
     else:
