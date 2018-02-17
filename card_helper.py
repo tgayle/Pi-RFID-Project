@@ -1,7 +1,7 @@
 from database import database as db
 from platform import system
 
-is_linux = system() == "Linux"
+is_linux = (system() == "Linux")
 yes_confirm_options = ["yes", "y"]
 
 if is_linux:
