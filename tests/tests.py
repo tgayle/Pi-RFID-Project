@@ -1,5 +1,9 @@
 from database import database as db
 
+"""
+Module for testing additions and changes.
+"""
+
 db.open_database()
 
 
@@ -13,9 +17,9 @@ def test_failure_callback():
 
 def test_naming_cards():
     testcards = [
-        ["asdfasd", "nme 1"],
-        ["asdfopwe", "nme2"],
-        ["ae ef bc de", "nme3"]
+        ["de vi ce 01", "Name 1"],
+        ["de vi ce 02", "Name 2"],
+        ["de vi ce 03", "Name 3"]
     ]
 
     for li in testcards:

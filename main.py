@@ -71,13 +71,12 @@ def edit_card():
     print("")
     print("What would you like to do?")
 
-
-
     opts = [[opt_give_card_name, card_helper.name_card_ask_for_name]
             ]
 
     selected_item = select_from_options(opts)
     start_option(opts, selected_item - 1, parameters=card_uid)
+    return
 
 
 def add_automation():
