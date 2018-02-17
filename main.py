@@ -56,6 +56,9 @@ def edit_card():
     Provide extra options to a card such as changing name after scanning a card.
     :return: None
     """
+
+    opt_give_card_name = "Give this card a name."
+
     print("Please place the card you'd like to edit on the scanner.")
     card_uid, card_name = card_helper.wait_for_card()
 
@@ -63,11 +66,14 @@ def edit_card():
         print("Settings for card: %s" % card_uid)
     else:
         print("Settings for card %s (%s)" % (card_name, card_uid))
+        opt_give_card_name = "Rename this card."
 
     print("")
     print("What would you like to do?")
 
-    opts = [["Give this card a name.", card_helper.name_card_ask_for_name]
+
+
+    opts = [[opt_give_card_name, card_helper.name_card_ask_for_name]
             ]
 
     selected_item = select_from_options(opts)
