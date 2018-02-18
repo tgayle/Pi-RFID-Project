@@ -32,7 +32,7 @@ A series of programs that make use of a Raspberry Pi equipped with a PN532 RFID/
 
 - Read a card's ID
 - Add automations
--- Print a message
+	- Print a message
 - Execute automations
 - Assign a name to a card
 - List all cards
@@ -41,10 +41,10 @@ A series of programs that make use of a Raspberry Pi equipped with a PN532 RFID/
 
 - Web interface for interaction
 - Automations:
--- Option for automations that launch bash or other python scripts
--- Option for automations to make HTML requests
-- Assigning one automation to multiple cards
-- Assigning a card to multiple automations
+	- Option for automations that launch bash or other python scripts
+	- Option for automations to make HTML requests
+	- Assigning one automation to multiple cards
+	- Assigning a card to multiple automations
 
 # Examples:
 ---
