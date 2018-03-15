@@ -1,4 +1,5 @@
 import sqlite3
+import threading
 from sys import maxsize
 
 _TABLE_SCRIPT_REFERENCE_NAME = "references"
@@ -23,13 +24,14 @@ _CREATE_CARDS_NAMES_LIST_TABLE = "CREATE TABLE IF NOT EXISTS %s (uid TEXT, nickn
 
 _conn = None
 _cursor = None
-
+lock = threading.Lock()  # Create a lock to prevent multiple cursors when requests come.
 
 def open_database():
     """
     Opens and prepares database.
     :return: None
     """
+    lock.acquire(True)
     global _conn
     global _cursor
 
@@ -40,7 +42,7 @@ def open_database():
     _cursor.execute(_CREATE_REFERENCES_TABLE)
     _cursor.execute(_CREATE_SCRIPTS_TABLE)
     _cursor.execute(_CREATE_CARDS_NAMES_LIST_TABLE)
-
+    lock.release()
 
 def close_database():
     """
@@ -63,7 +65,7 @@ def add_script(rfid, script_name, type, script, on_finish_callback=None):
     completed
     :return: None.
     """
-
+    lock.acquire(True)
     reference = _get_identifier(script_name)
 
     _cursor.execute("SELECT * FROM 'references' WHERE script_reference=?", [reference])
@@ -84,6 +86,7 @@ def add_script(rfid, script_name, type, script, on_finish_callback=None):
         _cursor.execute("INSERT INTO %s (script_id, 'type', script) VALUES (?, ?, ?)"
                         % _TABLE_SCRIPTS_NAME, (reference, type, script))
         _conn.commit()
+        lock.release()
 
         if on_finish_callback is not None:
             on_finish_callback()
@@ -100,6 +103,7 @@ def get_script_for_card(uid):
 
     Returns [None, None] if script is assigned to a card.
     """
+    lock.acquire(True)
     _cursor.execute("SELECT * FROM '%s' WHERE rfid_id=?" % _TABLE_SCRIPT_REFERENCE_NAME, [uid])
 
     cursor_reference = _cursor.fetchone()
@@ -109,7 +113,7 @@ def get_script_for_card(uid):
 
     _cursor.execute("SELECT type, script FROM %s WHERE script_id=?" % _TABLE_SCRIPTS_NAME, [str(cursor_reference[3])])
     returned = _cursor.fetchone()
-
+    lock.release()
     return [returned[0], returned[1]]
 
 
@@ -135,6 +139,7 @@ def name_card_db(uid, name):
     :param name: The selected name that will be assigned to the RFID
     :return: None
     """
+    lock.acquire(True)
     _cursor.execute("SELECT * FROM %s WHERE uid=?" % _TABLE_CARD_NICKNAMES_NAME, [uid])
 
     if len(_cursor.fetchall()) > 0:
@@ -142,6 +147,7 @@ def name_card_db(uid, name):
     else:
         _cursor.execute("INSERT INTO %s (uid, nickname) VALUES (?, ?)" % _TABLE_CARD_NICKNAMES_NAME, (uid, name))
     _conn.commit()
+    lock.release()
     return
 
 
@@ -153,9 +159,10 @@ def get_card_name(uid):
     str: The name assigned to the given RFID.
     None: If there is no name assigned to this RFID, then return None.
     """
+    lock.acquire(True)
     _cursor.execute("SELECT nickname from %s WHERE uid=?" % _TABLE_CARD_NICKNAMES_NAME, [uid])
     db_result = _cursor.fetchone()
-
+    lock.release()
     if db_result is None:
         return None
     else:
@@ -167,12 +174,13 @@ def get_all_cardnames():
     Returns a list of all cards with their ID and name.
     :return: A list of all cards that have also been named. Each index in the array is formatted as [RFID, nickname]
     """
+    lock.acquire(True)
     _cursor.execute("SELECT * from %s" % _TABLE_CARD_NICKNAMES_NAME)
     cards = _cursor.fetchall()
 
     for i in range(len(cards)):
         cards[i] = [str(cards[i][0]), str(cards[i][1])]
-
+    lock.release()
     return cards
 
 

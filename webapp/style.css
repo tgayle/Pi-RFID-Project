@@ -1,0 +1,62 @@
+body {
+    /* --bg-color: #1c313a; */
+    --bg-color: #a8a8a8;    
+    /* font-family: "Roboto"; */
+    color: #fafafa;
+    /* padding-top: 60px; */
+    background-color: var(--bg-color);
+}
+
+.output {
+    /* font-family: 'Source Code Pro', monospace; */
+    font-family: monospace;
+    font-size: 12px;
+    margin: 0;
+}
+
+.minimized-circle {
+    height: 75px !important;
+    width: 75px !important;
+    border-radius: 50%;
+    background-color: steelblue;
+    display: flex;
+    align-self: center;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.minimized-circle > * {
+    display: none;
+}
+.minimized-circle:hover {
+    background-color: wheat;
+}
+
+.card-function {
+    /* display: inline-block; */
+    padding: 4px;
+    /* border: 2px dashed steelblue; */
+}
+
+.hidden-card-function {
+    display: none !important;
+}
+
+command-cancel-form-btn {
+    padding-top: 30px !important;
+
+}
+
+/* Animations */
+
+
+/* Bootstrap Overwrites */
+
+.navbar-text, .nav-link {
+    color: white !important;
+    transition: all 0.3s;
+}
+
+.nav-link:hover {
+    color: steelblue !important;
+}

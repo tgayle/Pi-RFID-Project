@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>COP 2006 Innovation</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Source+Code+Pro" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="main.css">
+  <!-- <link rel="stylesheet" href="style.css"> -->
+
+</head>
+
+<body>
+  <!-- Nav Bar -->
+  <nav class="navbar static-top navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="#">COP 2006</a>
+    <a class="nav-link" href="https://github.com/tgayle/Pi-RFID-Project">Github</a>
+    <div class="square-div" id="nav-square-div"></div>
+
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+        </li>
+      </ul>
+
+      <div class="my-2 my-lg-0">
+        <p id="navbar_card_status" class="navbar-text">No card detected...</p>
+      </div>
+
+    </div>
+  </nav>
+
+
+
+
+  <div class="container-fluid user-input">
+    <div class="row">
+      <div class="col-md-3">
+
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="text-center">
+
+              <p id="card_found_p" class="user-input text-center"></p>
+              <p id="waiting_for_card" class="user-input text-center">Waiting...</p>
+              <button type="button" id="lookforcard" class="btn btn-primary">Force Card Refresh</button>
+            </div>
+
+          </div>
+        </div>
+
+
+      </div>
+      <div class="col-md-3"></div>
+
+    </div>
+
+    <div class="row">
+      <div id="command-div" class="expandable-circle mx-auto">
+        <div id="commands">
+          <p class="info-text">Commands 
+            <i class="material-icons rounded float-right" id="close-commands">cancel</i>              
+          </p>
+          <div id="cardopts">
+            <p>
+              <a href="#" id="option_give_card_name">Give this card a name.</a>
+            </p>
+
+            <div id="action_inputfield">
+              <form>
+
+                <h5>What would you like to name this card?
+                  <i class="material-icons rounded float-right" id="cancel-form">cancel</i>
+                </h5>
+                <input id="name_card" type="text">
+                <br>
+                <p>Automation Type:</p>
+                <label>
+                  <input type="radio" name="automation_type" id="radioPrint"> Print a message</label>
+                <br>
+                <label>
+                  <input type="radio" name="automation_type" id="radioPython"> Run a Python script</label>
+                <br>
+                <label>
+                  <input type="radio" name="automation_type" id="radioHTML"> Send an HTML request</label>
+                <br>
+                <button class="btn info-text" id="confirm-form">Confirm</button>
+
+
+              </form>
+            </div>
+
+            <p><a href="#" id="option_add_automation">Give this card an automation</a></p>
+            <p><a href="#" id="option_execute_automation">Execute an automation</a></p>
+            <p><a href="#" id="option_list_cards_text">List all cards</a></p>
+          </div>
+    </div>
+    </div>
+  </div>
+
+    <div class="row">
+
+      <div class="col-md-12">
+            
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <p>Sample Text</p>
+        <div id="console_holder">
+          <p class="output bold">Console:</p>
+          <div class="output" id="console_div">
+            <p id="command_output" class="output"></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="preinit.js"></script>
+  <script src="page_interactions.js"></script>
+  <script src="postinit.js"></script>
+
+</body>
+
+</html>

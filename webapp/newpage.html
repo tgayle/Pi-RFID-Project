@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>COP 2006 Innovation</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Source+Code+Pro" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- <link rel="stylesheet" href="main.css"> -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Nav Bar -->
+  <nav class="navbar static-top navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="#">COP 2006</a>
+    <a class="nav-link" href="https://github.com/tgayle/Pi-RFID-Project">Github</a>
+    <div class="square-div" id="nav-square-div"></div>
+
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+        </li>
+      </ul>
+
+      <div class="my-2 my-lg-0">
+        <p id="navbar_card_status" class="navbar-text">No card detected...</p>
+      </div>
+
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row card-info">
+      <div class="col-md-12">
+        <div class="text-center">
+          <p id="card_found_p" class="user-input text-center"></p>
+          <p id="waiting_for_card" class="user-input text-center">Waiting...</p>
+          <button type="button" id="lookforcard" class="btn btn-primary">Force Card Refresh</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card-functions minimized-circle mx-auto my-auto" id="cardFunctionsDiv">
+          <div>
+            <div><a href="#" id="option_give_card_name" class="card-function-choice">Give this card a name.</a>
+              <div id="action_inputfield" class="card-function hidden-card-function">
+                  <form>
+                    <h5>What would you like to name this card?
+                      <i class="material-icons rounded command-cancel-form-btn">cancel</i>
+                    </h5>
+                    <input id="name_card" type="text">
+                    <br>
+                    <button class="btn info-text" id="confirm-form">Confirm</button>
+                  </form>
+                </div>
+              </div>
+            
+
+            <div><a href="#" id="option_add_automation" class="card-function-choice">Give this card an automation</a>
+              <div class="card-function hidden-card-function">
+                <!-- Input form goes here -->
+                <!-- End Input form -->
+                <form>
+                  <h5>Add automation:
+                    <i class="material-icons rounded command-cancel-form-btn">cancel</i>
+                  </h5>
+                  <br>
+                  <p>Automation Type:</p>
+                  <label>
+                    <input type="radio" name="automation_type" id="radioPrint"> Print a message</label>
+                  <br>
+                  <label>
+                    <input type="radio" name="automation_type" id="radioPython"> Run a Python script</label>
+                  <br>
+                  <label>
+                    <input type="radio" name="automation_type" id="radioHTML"> Send an HTML request</label>
+                  <br>
+                </form>
+                <!-- Input form goes here -->
+                <!-- End Input form -->
+              </div>
+            </div>
+            <div><a href="#" id="option_execute_automation" class="card-function-choice">Execute an automation</a>
+              <div class="card-function hidden-card-function">
+                <!-- Input form goes here -->
+                <form>
+                  <!-- This executes automations. -->
+                </form>
+                <!-- End Input form -->
+              </div>
+            </div>
+            <div><a href="#" id="option_list_cards_text" class="card-function-choice">List all cards</a>
+              <div class="card-function hidden-card-function">
+                <!-- Input form goes here -->
+                <form>
+                  <!-- No need for a form here. -->
+                </form>
+                <!-- End Input form -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 card-console">
+          <p>Sample Text</p>
+          <div id="console_holder">
+            <p class="output bold">Console:</p>
+            <div class="output" id="console_div">
+              <p id="command_output" class="output"></p>
+            </div>
+          </div>
+        </div>
+    </div>
+
+  </div>
+  <script src="preinit.js"></script>
+  <script src="page_interactions.js"></script>
+  <script src="postinit.js"></script>
+</body>
+</html>

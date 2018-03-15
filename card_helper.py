@@ -21,7 +21,7 @@ if is_linux:
     modulation.nbr = nfc.NBR_106
 
 
-def get_nfc_uid(device):
+def parse_nfc_uid(device):
     """
     Parses from the string returned from nfc.str_nfc_target and just returns the uid.
     :param device: An object of the card class from nfc's implementation. Get this from initiator_list_passive_targets
@@ -44,7 +44,23 @@ def wait_for_card():
     while number_found < 1:
         number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 1)
 
-    uid = get_nfc_uid(devices[0])
+    uid = parse_nfc_uid(devices[0])
+    return [uid, db.get_card_name(uid)]
+
+
+def wait_for_card_noblock():
+    """
+    Pings for an NFC device. If one isn't found on the scanner at the moment this is called then [None, None]
+    is returned.
+    :return: Tuple. [uid, card_name] if device found, else [None, None]
+    """
+    number_found, devices = nfc.initiator_list_passive_targets(listener, modulation, 1)
+
+    try:
+        uid = parse_nfc_uid(devices[0])
+    except:
+        return [None, None]
+
     return [uid, db.get_card_name(uid)]
 
 
@@ -55,13 +71,6 @@ def name_card(card, name):
     :param name: The name to be assigned to the card.
     :return: None
     """
-    confirm = "no"
-
-    print("Are you sure that you want to name this card %s" % name)
-    if confirm is not "yes" or confirm is not "y":
-        print("Cancelled.")
-        return
-
     db.name_card_db(card, name)
 
 
