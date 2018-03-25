@@ -1,6 +1,6 @@
 body {
-    /* --bg-color: #1c313a; */
-    --bg-color: #a8a8a8;    
+     --bg-color: #1c313a;
+    /*--bg-color: #a8a8a8;    */
     /* font-family: "Roboto"; */
     color: #fafafa;
     /* padding-top: 60px; */
@@ -42,8 +42,32 @@ body {
     display: none !important;
 }
 
-command-cancel-form-btn {
-    padding-top: 30px !important;
+.card-function-text-header {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.card-function-textbox {
+  border-radius: 8px;
+  outline: none;
+}
+
+.card-function-btn {
+  margin-top: 4px;
+}
+
+.command-cancel-form-btn {
+  padding-top: 30px !important;
+  transition: all 0.2s;
+}
+
+.command-cancel-form-btn:hover {
+  color: wheat;
+}
+
+.card-function-choice {
+  color: white;
 
 }
 

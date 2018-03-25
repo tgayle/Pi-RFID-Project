@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>COP 2006 Innovation</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>COP 2006 Innovation</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Roboto|Source+Code+Pro" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Source+Code+Pro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/lib/bootstrap.min.css">
+  <script src="js/lib/jquery-3.3.1.min.js"></script>
+  <script src="js/lib/popper.min.js"></script>
+  <script src="js/lib/bootstrap.min.js"></script>
+  <script src="js/lib/pico.min.js"></script>
 
-    <!-- <link rel="stylesheet" href="main.css"> -->
-    <link rel="stylesheet" href="style.css">
+  <!-- <link rel="stylesheet" href="main.css"> -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <!-- Nav Bar -->
@@ -56,16 +57,17 @@
     <div class="row">
       <div class="col-md-6">
         <div class="card-functions minimized-circle mx-auto my-auto" id="cardFunctionsDiv">
+
           <div>
             <div><a href="#" id="option_give_card_name" class="card-function-choice">Give this card a name.</a>
               <div id="action_inputfield" class="card-function hidden-card-function">
-                  <form>
+                  <form id="function-name-card-form">
                     <h5>What would you like to name this card?
                       <i class="material-icons rounded command-cancel-form-btn">cancel</i>
                     </h5>
-                    <input id="name_card" type="text">
+                    <input id="name_card" type="text" class="card-function-textbox">
                     <br>
-                    <button class="btn info-text" id="confirm-form">Confirm</button>
+                    <button class="btn info-text card-function-btn" id="confirm-form">Confirm</button>
                   </form>
                 </div>
               </div>
@@ -76,10 +78,9 @@
                 <!-- Input form goes here -->
                 <!-- End Input form -->
                 <form>
-                  <h5>Add automation:
+                  <p class="card-function-text-header">Add automation:
                     <i class="material-icons rounded command-cancel-form-btn">cancel</i>
-                  </h5>
-                  <br>
+                  </p>
                   <p>Automation Type:</p>
                   <label>
                     <input type="radio" name="automation_type" id="radioPrint"> Print a message</label>
@@ -90,6 +91,10 @@
                   <label>
                     <input type="radio" name="automation_type" id="radioHTML"> Send an HTML request</label>
                   <br>
+                  <div class="card-function-addautomation-html-div">
+                    <!--POST or GET. URL to ... to.-->
+                  </div>
+                  <button class="btn">Confirm</button>
                 </form>
                 <!-- Input form goes here -->
                 <!-- End Input form -->
@@ -117,7 +122,7 @@
         </div>
       </div>
       <div class="col-md-6 card-console">
-          <p>Sample Text</p>
+          <p>Sample Test</p>
           <div id="console_holder">
             <p class="output bold">Console:</p>
             <div class="output" id="console_div">
@@ -128,8 +133,8 @@
     </div>
 
   </div>
-  <script src="preinit.js"></script>
-  <script src="page_interactions.js"></script>
-  <script src="postinit.js"></script>
+  <script src="js/preinit.js"></script>
+  <script src="js/page_interactions.js"></script>
+  <script src="js/postinit.js"></script>
 </body>
 </html>

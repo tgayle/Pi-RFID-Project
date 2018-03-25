@@ -10,6 +10,13 @@ const navBarCardInfo = $("#navbar_card_status");
 const ERROR_CARD = "Error connecting to reader.";
 const NO_CARD_DET = "No card detected...";
 var lastConsoleMessage = "";
+var currentCardOnScanner;
+
+//https://stackoverflow.com/questions/1144783/how-to-replace-all-occurrences-of-a-string-in-javascript
+function replaceAll(str, search, replacement) {
+    str = str.split(search);
+    return str.join(replacement);
+}
 
 function formDateFromTimestamp(dateInstance) {
     const month = dateInstance.getMonth() + 1 + "";
@@ -58,15 +65,14 @@ var onFailure = function () {
 };
 
 function updateCardDetected() {
-    $.get("php/find_card.php", function (response) {
+    $.get("htmlapi/ping_for_card", function (response) {
         if (response.length === 0) {
             onFailure();
             return;
         }
-        const jsonRsp = JSON.parse(response);
+        const jsonRsp = response;
 
         if (jsonRsp.uid !== null) {
-
             cardOptionsDiv.toggle(true);
             var cardName = (jsonRsp.name === null) ? "Unnamed Card" : jsonRsp.name;
             var cardText = jsonRsp.uid + " (" + cardName + ")";
@@ -78,18 +84,14 @@ function updateCardDetected() {
             changeElementTitle(navBarCardInfo, "ID: " + jsonRsp.uid);
             navBarCardInfo.html("Editing: " + cardName);
             waitingForCard.html(cardText);
+            currentCardOnScanner = jsonRsp.uid;
         } else {
+            currentCardOnScanner = null;
             cardIDText.html(NO_CARD_DET);
             navBarCardInfo.html(NO_CARD_DET);
             changeElementTitle(navBarCardInfo, "");
             waitingForCard.html("Waiting...")
         }
 
-        if (jsonRsp.uid === null) {
-            // cardIDText.html(NO_CARD_DET);
-            // navBarCardInfo.html(NO_CARD_DET);
-            // changeElementTitle(navBarCardInfo, "");
-            // waitingForCard.html("Waiting...")
-        }
     }).fail(onFailure);
 }

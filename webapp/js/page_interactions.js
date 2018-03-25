@@ -1,27 +1,33 @@
-
-// deviceFoundBtn.click(function () {
-//     waitingForCard.html("Device found!");
-//     cardIDText.toggle(true);
-//     cardOptionsDiv.toggle(600);
-// });
-
-// deviceRemovedBtn.click(function () {
-//     waitingForCard.html("Waiting for card...");
-//     cardIDText.toggle(false);
-//     cardOptionsDiv.toggle(600);
-// });
-
 $("#option_list_cards_text").click(function () {
-    $.get("php/get_all_cards.php", function (data) {
-        const jsonRsp = JSON.parse(data);
+    $.get("htmlapi/get_all_cards", function (jsonRsp) {
+        // const jsonRsp = JSON.parse(data);
         console.log(JSON.stringify(jsonRsp));
-
+        var dividerStr = "#########";
+        addToTextConsole(dividerStr);
         jsonRsp.cards.forEach(function (card) {
             addToTextConsole(card.name + " (" + card.uid + ")");
-        })
+        });
+        addToTextConsole(dividerStr);
     });
 });
 
+$("#function-name-card-form").submit(function (e) {
+  addToTextConsole("called");
+  e.preventDefault();
+  $.ajax({
+    type: "POST",
+    url: "htmlapi/name_card",
+    data:
+        {uid: replaceAll(currentCardOnScanner, " ", ""),
+        name: $(this).find("input")[0].value},
+    success: function (re) {
+      console.log(re)
+      // alert("work");
+    }
+  });
+  });
+
+//
 $("#cardFunctionsDiv").click(function() {
     $(this).removeClass("minimized-circle mx-auto my-auto");
 });

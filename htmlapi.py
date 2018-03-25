@@ -31,14 +31,7 @@ def ping_for_card():
 
 @pico.expose()
 def get_card_name(uid):
-    parsed_id = ""
-
-    if len(uid.split()) > 4 or len(uid.split()) == 1:
-        for i in range(len(uid)):
-            if i % 2 == 0:
-                parsed_id += " "
-            parsed_id += uid[i]
-        uid = parsed_id.strip()
+    uid = card_helper.create_whitespace(uid)
 
     card_helper.db.open_database()
     name = card_helper.db.get_card_name(uid)
@@ -64,12 +57,13 @@ def get_all_cards():
 
 @pico.expose()
 def name_card(uid, name):
+    uid = card_helper.create_whitespace(uid)
     card_helper.db.open_database()
     card_helper.name_card(uid, name)
     result = {"uid": uid,
               "name": card_helper.db.get_card_name(uid)}
 
-    return json.dumps(result)
+    return result
 
 
 app = PicoApp()

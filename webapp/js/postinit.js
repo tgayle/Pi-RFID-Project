@@ -15,7 +15,7 @@ setInterval(function () {
         updateCardTimerId = 0;
     } else {
         if (updateCardTimerId === 0) {
-            // startUpdateTimer();
+            startUpdateTimer();
         }
     }
 }, 250);

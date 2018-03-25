@@ -130,3 +130,15 @@ def confirm_selection():
         return False
 
     return True
+
+def create_whitespace(uid):
+  parsed_id = ""
+
+  if len(uid.split()) > 4 or len(uid.split()) == 1:
+    for i in range(len(uid)):
+      if i % 2 == 0:
+        parsed_id += " "
+      parsed_id += uid[i]
+    uid = parsed_id.strip()
+
+  return uid
