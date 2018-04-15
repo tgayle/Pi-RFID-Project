@@ -83,17 +83,44 @@
                   </p>
                   <p>Automation Type:</p>
                   <label>
-                    <input type="radio" name="automation_type" id="radioPrint"> Print a message</label>
+                    <input type="radio" name="automation_type" id="radioPrint" value="print"> Print a message</label>
                   <br>
                   <label>
-                    <input type="radio" name="automation_type" id="radioPython"> Run a Python script</label>
+                    <input type="radio" name="automation_type" id="radioPython" value="python"> Run a Python script</label>
                   <br>
                   <label>
-                    <input type="radio" name="automation_type" id="radioHTML"> Send an HTML request</label>
+                    <input type="radio" name="automation_type" id="radioHTML" value="htmlRequest"> Send an HTML request</label>
                   <br>
-                  <div class="card-function-addautomation-html-div">
-                    <!--POST or GET. URL to ... to.-->
+
+                  <div class="gone" id="card-function-addautomation-printmsg-div">
+                    <label>Enter Message: <br>
+                      <textarea></textarea>
+                    </label>
                   </div>
+
+                  <div class="gone" id="card-function-addautomation-python-div">
+                    <label>Python Code: <br>
+                      <textarea></textarea>
+                    </label>
+                  </div>
+
+                  <div class="gone" id="card-function-addautomation-html-div">
+                    <!--POST or GET. URL to ... to.-->
+                    <div class="automation_htmlrequest_methods">
+                      <label>GET <input type="radio" value="GET" name="htmlMethod" checked></label>
+                      <label>POST <input type="radio" value="POST" name="htmlMethod"></label>
+                    </div>
+
+                    <div>
+                      <label>Parameters <br>
+                        <textarea>{"key": "value"}</textarea>
+                      </label>
+                      <p id="preview_html_request_link"></p>
+                    </div>
+
+                  </div>
+
+
                   <button class="btn">Confirm</button>
                 </form>
                 <!-- Input form goes here -->

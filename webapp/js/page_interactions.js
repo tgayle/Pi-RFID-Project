@@ -12,7 +12,6 @@ $("#option_list_cards_text").click(function () {
 });
 
 $("#function-name-card-form").submit(function (e) {
-  addToTextConsole("called");
   e.preventDefault();
   $.ajax({
     type: "POST",
@@ -42,4 +41,34 @@ $("div i.command-cancel-form-btn").click(function() {
     $(this).closest(".card-function").addClass("hidden-card-function");
 });
 
+$("input[name='automation_type']").change(function () {
+  switch ($(this).val()) {
+    case "print":
+      $("#card-function-addautomation-printmsg-div").removeClass("gone");
+      changeOtherAutomationInfoDivs(true, "#card-function-addautomation-printmsg-div");
+      break;
+    case "python":
+      $("#card-function-addautomation-python-div").removeClass("gone");
+      changeOtherAutomationInfoDivs(true, "#card-function-addautomation-python-div");
+      break;
+    case "htmlRequest":
+      $("#card-function-addautomation-html-div").removeClass("gone");
+      changeOtherAutomationInfoDivs(true, "#card-function-addautomation-html-div");
+      break;
+  }
+});
+
+function changeOtherAutomationInfoDivs(hideShow, dontHide) {
+  if (dontHide.charAt(0) !== "#") dontHide = "#" + dontHide;
+  const divs = ["#card-function-addautomation-html-div",
+  "#card-function-addautomation-python-div",
+  "#card-function-addautomation-printmsg-div"];
+
+  divs.forEach(function (elem) {
+    if (elem !== dontHide) $(elem).toggleClass("gone", hideShow);
+  })
+}
+
 findCardBtn.click(updateCardDetected);
+
+//TODO: Finish sending net requests
