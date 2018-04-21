@@ -15,7 +15,7 @@ _COLUMN_SCRIPT = "script"
 _TABLE_CARD_NICKNAMES_NAME = "cards"
 
 _CREATE_REFERENCES_TABLE = '''CREATE TABLE IF NOT EXISTS '%s' (%s TEXT, '%s' TEXT, '%s' TEXT, %s LONG)''' \
-                       % (_TABLE_SCRIPT_REFERENCE_NAME, _COLUMN_RFID_ID, _COLUMN_SCRIPT_NAME, _COLUMN_SCRIPT_TYPE, _COLUMN_SCRIPT_REFERENCE)
+                       % (_TABLE_SCRIPT_REFERENCE_NAME, _COLUMN_RFID_ID, _COLUMN_SCRIPT_NAME, _COLUMN_SCRIPT_TYPE, _COLUMN_SCRIPT)
 
 _CREATE_SCRIPTS_TABLE = '''CREATE TABLE IF NOT EXISTS %s (%s TEXT, %s TEXT, %s TEXT)'''\
                        % (_TABLE_SCRIPTS_NAME, _COLUMN_SCRIPT_ID, _COLUMN_SCRIPT_TYPE, _COLUMN_SCRIPT)
@@ -36,7 +36,6 @@ def open_database():
     global _cursor
 
     _conn = sqlite3.connect("scripts.db")
-
     _cursor = _conn.cursor()
 
     _cursor.execute(_CREATE_REFERENCES_TABLE)
@@ -59,7 +58,7 @@ def add_script(rfid, script_name, type, script, on_finish_callback=None):
 
     :param rfid: An NFC/RFID card's identifier. An 8 character id separated ever 2 characters for a total of 11 chars.
     :param script_name: The selected name to identify the script.
-    :param type: The type of script this is.
+    :param type: The type of script this is. May be PRINT, PYTHON, or HTMLREQ
     :param script: The script itself. if the type is "PRINT" then this is just the message to print itself.
     :param on_finish_callback: A optional function that may be passed in to let the calling module know when this is
     completed
@@ -68,53 +67,50 @@ def add_script(rfid, script_name, type, script, on_finish_callback=None):
     lock.acquire(True)
     reference = _get_identifier(script_name)
 
-    _cursor.execute("SELECT * FROM 'references' WHERE script_reference=?", [reference])
+    _cursor.execute("SELECT * FROM 'references' WHERE rfid_id=?", [rfid])
     result = _cursor.fetchall()
 
     if len(result) > 0:
-        card_name = get_card_name(rfid);
-        if card_name is None:
-            print("The name '%s' is already taken and assigned to %s" % (script_name, rfid))
-        else:
-            print("The name '%s' is already taken and assigned to %s (%s)" % (script_name, card_name, rfid))
+        _cursor.execute(
+            "UPDATE '%s' SET rfid_id=?, 'name'=?, 'type'=?, 'script'=? WHERE rfid_id=?" % _TABLE_SCRIPT_REFERENCE_NAME, (rfid, script_name, type, script, rfid))
+
+    else: #not already in db
+        _cursor.execute(
+            "INSERT INTO '%s' (rfid_id, 'name', 'type', 'script') VALUES (?, ?, ?, ?)"
+            % _TABLE_SCRIPT_REFERENCE_NAME,
+            (rfid, script_name, type, script))
+
+    _conn.commit()
+    lock.release()
+
+    if on_finish_callback is not None:
+        on_finish_callback()
         return
-
-    else:
-        _cursor.execute("INSERT INTO '%s' (rfid_id, 'name', 'type', script_reference) VALUES (?, ?, ?, ?)"
-                        % _TABLE_SCRIPT_REFERENCE_NAME, (rfid, script_name, type, reference))
-
-        _cursor.execute("INSERT INTO %s (script_id, 'type', script) VALUES (?, ?, ?)"
-                        % _TABLE_SCRIPTS_NAME, (reference, type, script))
-        _conn.commit()
-        lock.release()
-
-        if on_finish_callback is not None:
-            on_finish_callback()
-            return
 
 
 def get_script_for_card(uid):
     """
 
     :param uid: The uid for an NFC/RFID Device
-    :return: tuple of 2:
-    str: The type of script it was.
-    str: The script itself. This will be a path if it is a bash script.
+    :return: tuple of 3:
+    str: The script name
+    str: The type of script it was. PRINT, PYTHON, or HTMLREQ
+    str: The script itself.
 
-    Returns [None, None] if script is assigned to a card.
+    Returns [None, None] if script is not assigned to a card.
     """
     lock.acquire(True)
     _cursor.execute("SELECT * FROM '%s' WHERE rfid_id=?" % _TABLE_SCRIPT_REFERENCE_NAME, [uid])
 
-    cursor_reference = _cursor.fetchone()
+    result = _cursor.fetchone()
 
-    if cursor_reference is None:
-        return [None, None]
+    if result is None:
+        return [None, None, None]
 
-    _cursor.execute("SELECT type, script FROM %s WHERE script_id=?" % _TABLE_SCRIPTS_NAME, [str(cursor_reference[3])])
-    returned = _cursor.fetchone()
+    # _cursor.execute("SELECT * FROM %s WHERE script_id=?" % _TABLE_SCRIPTS_NAME, [str(cursor_reference[3])])
+    # returned = _cursor.fetchone()
     lock.release()
-    return [returned[0], returned[1]]
+    return [str(result[1]), result[2], result[3]]
 
 
 def _get_identifier(obj):

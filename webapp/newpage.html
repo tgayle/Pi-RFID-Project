@@ -12,34 +12,17 @@
   <script src="js/lib/jquery-3.3.1.min.js"></script>
   <script src="js/lib/popper.min.js"></script>
   <script src="js/lib/bootstrap.min.js"></script>
-  <script src="js/lib/pico.min.js"></script>
 
-  <!-- <link rel="stylesheet" href="main.css"> -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <!-- Nav Bar -->
   <nav class="navbar static-top navbar-expand-lg navbar-dark">
     <a class="navbar-brand" href="#">COP 2006</a>
-    <a class="nav-link" href="https://github.com/tgayle/Pi-RFID-Project">Github</a>
-    <div class="square-div" id="nav-square-div"></div>
+    <a class="navbar-text" href="https://github.com/tgayle/Pi-RFID-Project">Github</a>
+    <a id="navbar_card_status" class="navbar-text ml-auto">No card detected...</a>
 
-
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-      aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-        </li>
-      </ul>
-
-      <div class="my-2 my-lg-0">
-        <p id="navbar_card_status" class="navbar-text">No card detected...</p>
-      </div>
-
+    <div class="">
     </div>
   </nav>
 
@@ -77,7 +60,7 @@
               <div class="card-function hidden-card-function">
                 <!-- Input form goes here -->
                 <!-- End Input form -->
-                <form>
+                <form id="function-add-automation-form">
                   <p class="card-function-text-header">Add automation:
                     <i class="material-icons rounded command-cancel-form-btn">cancel</i>
                   </p>
@@ -89,18 +72,23 @@
                     <input type="radio" name="automation_type" id="radioPython" value="python"> Run a Python script</label>
                   <br>
                   <label>
-                    <input type="radio" name="automation_type" id="radioHTML" value="htmlRequest"> Send an HTML request</label>
+                    <input type="radio" name="automation_type" id="radioHTML" value="htmlRequest"> Send an HTTP request</label>
                   <br>
 
+                  <div id="addautomation-setname-div">
+                    <label>Automation Name: <br>
+                      <input id="addautomation-setname-input" type="text">
+                    </label>
+                  </div>
                   <div class="gone" id="card-function-addautomation-printmsg-div">
                     <label>Enter Message: <br>
-                      <textarea></textarea>
+                      <textarea id="card-function-addautomation-printinput"></textarea>
                     </label>
                   </div>
 
                   <div class="gone" id="card-function-addautomation-python-div">
                     <label>Python Code: <br>
-                      <textarea></textarea>
+                      <textarea id="card-function-addautomation-pythoninput"></textarea>
                     </label>
                   </div>
 
@@ -112,8 +100,12 @@
                     </div>
 
                     <div>
+                      <label>Address: <br>
+                        <textarea id="card-function-add-automation-htmladdress" placeholder="https://google.com"></textarea>
+                      </label>
+                      <br>
                       <label>Parameters <br>
-                        <textarea>{"key": "value"}</textarea>
+                        <textarea id="card-function-add-automation-htmlparams" placeholder="{'key': 'value'}"></textarea>
                       </label>
                       <p id="preview_html_request_link"></p>
                     </div>
@@ -121,22 +113,27 @@
                   </div>
 
 
-                  <button class="btn">Confirm</button>
+                  <button class="btn info-text card-function-btn" id="confirm-add-automation">Confirm</button>
                 </form>
                 <!-- Input form goes here -->
                 <!-- End Input form -->
               </div>
             </div>
+
             <div><a href="#" id="option_execute_automation" class="card-function-choice">Execute an automation</a>
+
+            </div>
+            <div><a href="#" id="option_list_cards_text" class="card-function-choice">List all cards</a>
               <div class="card-function hidden-card-function">
                 <!-- Input form goes here -->
                 <form>
-                  <!-- This executes automations. -->
+                  <!-- No need for a form here. -->
                 </form>
                 <!-- End Input form -->
               </div>
             </div>
-            <div><a href="#" id="option_list_cards_text" class="card-function-choice">List all cards</a>
+
+            <div><a href="#" id="option_clear_console" class="card-function-choice">Clear Console</a>
               <div class="card-function hidden-card-function">
                 <!-- Input form goes here -->
                 <form>
@@ -149,7 +146,7 @@
         </div>
       </div>
       <div class="col-md-6 card-console">
-          <p>Sample Test</p>
+        <br>
           <div id="console_holder">
             <p class="output bold">Console:</p>
             <div class="output" id="console_div">

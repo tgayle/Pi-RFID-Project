@@ -33,23 +33,15 @@ A series of programs that make use of a Raspberry Pi equipped with a PN532 RFID/
 - Read a card's ID
 - Add automations
 	- Print a message
+	- Add python scripts
+	- Set HTTP requests (GET, POST)
 - Execute automations
 - Assign a name to a card
 - List all cards
-
-# Planned features:
-
-- Web interface for interaction
-- Automations:
-	- Option for automations that launch bash or other python scripts
-	- Option for automations to make HTML requests
-	- Assigning one automation to multiple cards
-	- Assigning a card to multiple automations
+- Web UI for interaction
 
 # Examples:
 ---
-<img src="https://i.imgur.com/3iCZVMq.png" height="201" width=480>
-
-<img src="https://i.imgur.com/vsduqJ3.jpg" height="252" width=189>
+<img src="https://i.imgur.com/KW6CDyt.png" height="252" width=189>
 
 

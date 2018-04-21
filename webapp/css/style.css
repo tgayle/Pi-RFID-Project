@@ -74,6 +74,15 @@ body {
   display: none; !important;
 }
 
+#navbar_card_status {
+
+}
+
+#console_holder {
+  overflow: hidden;
+  max-height: 500px;
+}
+
 /* Animations */
 
 

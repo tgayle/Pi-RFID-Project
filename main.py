@@ -81,7 +81,7 @@ def edit_card():
 
 def add_automation():
     """
-    Adds an automation to a card. May be PRINT, "PYSCR", or "BSHSCR" (print, python script, or bash script)
+    Adds an automation to a card. May be PRINT, "PYTHON", or "HTMLREQ" (print, python script, or bash script)
     :return: None
     """
     print("Place the card you'd like to edit on the scanner.")

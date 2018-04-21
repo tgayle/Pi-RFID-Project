@@ -1,5 +1,12 @@
+import commands
+from subprocess import Popen, PIPE
+from sys import executable as executable_path
 from database import database as db
 from platform import system
+from json import loads
+from time import sleep
+import requests
+
 
 is_linux = (system() == "Linux")
 yes_confirm_options = ["yes", "y"]
@@ -142,3 +149,49 @@ def create_whitespace(uid):
     uid = parsed_id.strip()
 
   return uid
+
+
+def run_automation(script):
+  with open("temp.py", "w"):
+    pass  # clear first
+  with open("temp.py", "w") as filer:
+    filer.write(script)
+    filer.seek(0)
+    status, output = commands.getstatusoutput("python" + " " + filer.name)
+  with open("temp.py", 'w'):
+    pass  # empty file
+  return output
+
+
+def html_request(method, url, data):
+  """
+  :type method: str
+  :type url: str
+  :type data: dict
+  :param method:
+  :param url:
+  :param data:
+  :return:
+  """
+  if method == "POST":
+    request = requests.post(url=url, data=data)
+    return request.text
+  elif method == "GET":
+    get_request = requests.get(url=url, params=data)
+    return get_request.text
+  else:
+    return "Unknown Method: " + method
+
+
+def parse_html_request(script):
+  """
+
+  :type script: str
+  """
+  lines = script.split("\n")
+  method = lines[0]
+  url = lines[1]
+  returned_data = None
+  if len(lines[2]) > 0 and lines[2][0] != "{":
+    returned_data = loads(lines[2])
+  return [method, url, returned_data]

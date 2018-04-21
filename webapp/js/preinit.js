@@ -1,5 +1,3 @@
-const deviceFoundBtn = $("#device_found_temp");
-const deviceRemovedBtn = $("#device_removed_temp");
 const findCardBtn = $("#lookforcard");
 const cardIDText = $("#card_found_p");
 const waitingForCard = $("#waiting_for_card");
@@ -11,6 +9,8 @@ const ERROR_CARD = "Error connecting to reader.";
 const NO_CARD_DET = "No card detected...";
 var lastConsoleMessage = "";
 var currentCardOnScanner;
+var safeCardId;
+var currentCardName;
 
 //https://stackoverflow.com/questions/1144783/how-to-replace-all-occurrences-of-a-string-in-javascript
 function replaceAll(str, search, replacement) {
@@ -44,7 +44,10 @@ function addToTextConsole(str, forceLog) {
 
     if (forceLog || str !== lastConsoleMessage) {
         var message = formDateFromTimestamp(new Date()) + ": " + str;
-        request_console.html(request_console.html() + message + "<br>");
+        // request_console.html(request_console.html() + message + "<br>");
+        request_console.append(formDateFromTimestamp(new Date()) + " ");
+        request_console.append(str);
+        request_console.append("<br>");
         console.log(message);
         lastConsoleMessage = str;
 
@@ -85,8 +88,12 @@ function updateCardDetected() {
             navBarCardInfo.html("Editing: " + cardName);
             waitingForCard.html(cardText);
             currentCardOnScanner = jsonRsp.uid;
+            safeCardId = replaceAll(currentCardOnScanner, " ", "");
+            currentCardName = cardName;
         } else {
             currentCardOnScanner = null;
+            safeCardId = null;
+            currentCardName = null;
             cardIDText.html(NO_CARD_DET);
             navBarCardInfo.html(NO_CARD_DET);
             changeElementTitle(navBarCardInfo, "");
