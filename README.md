@@ -42,6 +42,6 @@ A series of programs that make use of a Raspberry Pi equipped with a PN532 RFID/
 
 # Examples:
 ---
-<img src="https://i.imgur.com/KW6CDyt.png" height="252" width=189>
+<img src="https://i.imgur.com/KW6CDyt.png" height="270" width=390>
 
 
